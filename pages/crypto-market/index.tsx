@@ -12,8 +12,35 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Layout from "../../components/Layout";
+import { useQuery } from "react-query";
+
+
+type Price = {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  current_price : string;
+  price_change_percentage_24h : string;
+  total_volume: string;
+  market_cap : string;
+}
+
+const getMarket = async () => {
+  const URL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=IDR&per_page=10";
+  const response = await fetch(URL);
+
+  if(!response.ok) {
+    throw new Error("Fetching Error");
+  }
+
+  return await response.json();
+}
 
 export default function Market() {
+  const { data, isError, isLoading, isFetching, isSuccess} = useQuery("market", getMarket);
+
+
   return (
     <Layout title="Crypto Market">
       <Table variant="simple">
@@ -27,46 +54,30 @@ export default function Market() {
           </Tr>
         </Thead>
         <Tbody>
-          <Tr>
+
+         { data.map((price: Price) => (
+                <Tr>
             <Td>
               <Flex alignItems="center">
                 <Image
-                  src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579"
+                  src={price.image}
                   boxSize="24px"
                   ignoreFallback={true}
                 />
 
                 <Text pl={2} fontWeight="bold" textTransform="capitalize">
-                  Bitcoin
+                 {price.id}
                 </Text>
-                <Badge ml={3}>BTC</Badge>
+                <Badge ml={3}> {price.symbol} </Badge>
               </Flex>
             </Td>
-            <Td>495460000</Td>
-            <Td>-5.11</Td>
-            <Td isNumeric>729292071672270</Td>
-            <Td isNumeric>9600947757539514</Td>
+            <Td> {price.current_price} </Td>
+            <Td>{price.price_change_percentage_24h}</Td>
+            <Td isNumeric> {price.total_volume} </Td>
+            <Td isNumeric> {price.market_cap} </Td>
           </Tr>
-          <Tr>
-            <Td>
-              <Flex alignItems="center">
-                <Image
-                  src="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880"
-                  boxSize="24px"
-                  ignoreFallback={true}
-                />
-
-                <Text pl={2} fontWeight="bold" textTransform="capitalize">
-                  Ethereum
-                </Text>
-                <Badge ml={3}>ETH</Badge>
-              </Flex>
-            </Td>
-            <Td>16910000</Td>
-            <Td>-1.45</Td>
-            <Td isNumeric>539816863146117</Td>
-            <Td isNumeric>2144364989936726</Td>
-          </Tr>
+          ))}
+     
         </Tbody>
       </Table>
     </Layout>

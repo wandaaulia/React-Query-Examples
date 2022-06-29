@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
        <ChakraProvider resetCSS={true} theme={theme}>
       <Component {...pageProps} />
     </ChakraProvider>
-    <ReactQueryDevtools />
+    <ReactQueryDevtools/>
     </QueryClientProvider>
  
   );
