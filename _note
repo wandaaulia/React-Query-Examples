@@ -1,0 +1,11 @@
+React Query :
+1. Query -> http method GET
+2. Mutation -> http method POST
+3. Cache -> temporary storage
+
+untuk menggunakan react query, 
+aplikasi kita harus dibungkus dengan Provider
+
+<QueryClientProvider> 
+    <App/>
+</QueryClientProvider>
